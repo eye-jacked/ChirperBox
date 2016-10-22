@@ -1,6 +1,7 @@
 <?php
 
-class UserRepo{
+class UserRepo
+{
 
     private $pdo;
 
@@ -45,7 +46,8 @@ class UserRepo{
         return $users;
     }
 
-    private function queryforUsers(){
+    private function queryforUsers()
+    {
 
         $stmt = $this->getPDO()->prepare('SELECT * FROM rst_users');
         $stmt->execute();
@@ -54,15 +56,34 @@ class UserRepo{
         return $this->createUserFromData($userData);
     }
 
-public function saveUserToDb(){
+    public function saveUserToDb()
+    {
 
-    $stmt = $this->getPDO()->prepare('INSERT * FROM rst_users');
-    $stmt->execute();
+        $stmt = $this->getPDO()->prepare('INSERT * FROM rst_users');
+        $stmt->execute();
 
-}
+    }
 
-//TODO: SAVE USER TO DB
-//
+
+    public function addNewUser(User $user)
+    {
+        $stmt = $this->pdo->prepare('INSERT INTO rst_users (email,fname,surname,hash)
+                                                         VALUES (:email,:fname,:surname,:hash);');
+
+        $email = $user->getEmail();
+        $fname = $user->getFname();
+        $surname = $user->getSurname();
+        $hash = $user->getHash();
+
+        $stmt->bindParam(':email', $email , PDO::PARAM_STR);
+        $stmt->bindParam(':fname', $fname , PDO::PARAM_STR);
+        $stmt->bindParam(':surname',$surname , PDO::PARAM_STR);
+        $stmt->bindParam(':hash', $hash , PDO::PARAM_STR);
+        $stmt->execute();
+
+    }
+
+
 ////TODO: GET USER BY ID
 //
 ///TODO: SAVE USER TO DB

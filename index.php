@@ -1,10 +1,16 @@
 <?php
 session_start();
+include('includes/header.php');
 
-if (isset($_SESSION['user'])) {
-    $logged= True;
-    echo "logged in";
-} else {
-    $logged = False;
-    echo '<a href="login.php">login required</a>';
-}
+if(isset($_SESSION['id'])){ ?>
+
+
+    Welcome to your homepage
+
+    //post a new tweet
+    <form>
+
+
+    </form>
+
+<?php } ?>

@@ -84,7 +84,6 @@ class Container
             $this->msgRepo = new MsgRepo($this->getPDO());
         }
 
-        return $this->msgRepo;
-    }
+        return $this->msgRepo;    }
 
 }

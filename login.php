@@ -1,5 +1,6 @@
 <?php session_start();
 require __DIR__ . '/bootstrap.php';
+include('includes/header.php');
 
 $container = new Container($configuration);
 
@@ -16,18 +17,19 @@ if (isset($_POST['login']))   // did user arrive by pressing login
     $pdo = $container->getPDO();
     $userRepo = $container->getUserRepo();
 
-    $user = $userRepo->getUserbyEmail($userEmail);
+    $user = $userRepo->getUserByEmail($userEmail);
 
 
     $hash = $user->getHash();
     $x = (password_verify($pass, $hash));
-    var_dump($userEmail, $pass, $user, $_SESSION, $x);
-
 
     if (password_verify($pass, $hash)) {
 
-        $_SESSION['user'] = $user;
-
+        $_SESSION['fname']=$user->getFname();
+        $_SESSION['surname']=$user->getSurname();
+        $_SESSION['email']=$user->getEmail();
+        $_SESSION['id']=$user->getId();
+        $_SESSION['flash'] = "You have been authenticated as".$user->getFname()." ".$user->getSurname();
         echo '<script type="text/javascript"> window.open("index.php","_self");</script>';            //  On Successfull Login redirects to index.php
 
     } else {
