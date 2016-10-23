@@ -19,9 +19,8 @@ class ChirpRepo{
         $stmt = $this->pdo->prepare('SELECT * FROM rst_chirps WHERE rst_users_id = :userid');
         $stmt->bindParam(':userid', $userId, PDO::PARAM_INT);
         $stmt->execute();
-        $chirpsData = $stmt->fetch(PDO::FETCH_ASSOC);
+        $chirpsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        var_dump($chirpsData);die;
         if (!$chirpsData) {
             $nullChirp = new Chirp();
             $nullChirp->setContent("You haven't posted any tweets! Maybe it's time to get started!");
