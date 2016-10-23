@@ -1,10 +1,9 @@
 <?php session_start();
 require __DIR__ . '/bootstrap.php';
-include('includes/header.php');
 
 $container = new Container($configuration);
 
-if (isset($_SESSION['user']))   // if logged in, redirect to home
+if (isset($_SESSION['id']))   // if logged in, redirect to home
 {
     header("Location:index.php");
 }
@@ -29,7 +28,7 @@ if (isset($_POST['login']))   // did user arrive by pressing login
         $_SESSION['surname']=$user->getSurname();
         $_SESSION['email']=$user->getEmail();
         $_SESSION['id']=$user->getId();
-        $_SESSION['flash'] = "You have been authenticated as".$user->getFname()." ".$user->getSurname();
+        $_SESSION['flash'] = "You have been authenticated as ".$user->getFname()." ".$user->getSurname();
         echo '<script type="text/javascript"> window.open("index.php","_self");</script>';            //  On Successfull Login redirects to index.php
 
     } else {
