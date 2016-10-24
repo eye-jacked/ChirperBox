@@ -75,14 +75,26 @@ class UserRepo
         $surname = $user->getSurname();
         $hash = $user->getHash();
 
-        $stmt->bindParam(':email', $email , PDO::PARAM_STR);
-        $stmt->bindParam(':fname', $fname , PDO::PARAM_STR);
-        $stmt->bindParam(':surname',$surname , PDO::PARAM_STR);
-        $stmt->bindParam(':hash', $hash , PDO::PARAM_STR);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->bindParam(':fname', $fname, PDO::PARAM_STR);
+        $stmt->bindParam(':surname', $surname, PDO::PARAM_STR);
+        $stmt->bindParam(':hash', $hash, PDO::PARAM_STR);
         $stmt->execute();
 
     }
 
+//    public function checkUserByEmail($receiverEmail)
+//    {
+//        $stmt = $this->pdo->prepare('SELECT * FROM rst_users WHERE email = :email;');
+//        $stmt->bindParam(':email', $receiverEmail, PDO::PARAM_STR);
+//        $stmt->execute();
+//        var_dump($stmt->fetch(PDO::FETCH_ASSOC));die;
+//        if ($stmt->fetch(PDO::FETCH_ASSOC)){
+//            return true;
+//        }else{
+//
+//        }
+//    }
 
 ////TODO: GET USER BY ID
 //

@@ -7,6 +7,7 @@ if (isset($_SESSION['id'])) { ?>
 
     Welcome to your homepage
 
+
     <!--    post a new chirp-->
     <form method="post" action="chirpsubmit.php">
         <input type="text" name="chirpContent">
@@ -20,6 +21,12 @@ if (isset($_SESSION['id'])) { ?>
     $container->getPDO();
     $chirpRepo = $container->getChirpRepo();
     $recentChirps = $chirpRepo->getAllChirps();
+
+//    $userRepo = $container->getUserRepo();
+//    $test = $userRepo->getUserByEmail("sallysue@gmail.com");
+//    if($userRepo->getUserByEmail("sallysue@gmail.com")) {
+//        var_dump($test);
+//    }
 
     foreach ($recentChirps as $chirp) {
         echo $chirp->getContent();

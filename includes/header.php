@@ -9,6 +9,7 @@ if (isset($_SESSION['id'])) {
     $logged= True;
     echo "logged in as ".$_SESSION['fname']." ".$_SESSION['surname']."<br>";
     echo '<a href="logout.php">logout</a><br>';
+    echo '<a href="msgInbox.php">inbox</a><br>';
 } else {
     header("Location:login.php");
 
