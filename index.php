@@ -19,18 +19,29 @@ if (isset($_SESSION['id'])) { ?>
     $container = new Container($configuration);
     $container->getPDO();
     $chirpRepo = $container->getChirpRepo();
-    $recentChirps = $chirpRepo->getChirpsByUserId($_SESSION['id']);
+    $recentChirps = $chirpRepo->getAllChirps();
 
     foreach ($recentChirps as $chirp) {
         echo $chirp->getContent();
-        echo "HTML FORMATTING FOR MAKING COMMENTS LOOK NICE";
+        echo "<br>comments go here<br>";
         $postRepo = $container->getPostRepo();
-        $posts = $postRepo->getPostsByChirpId($chirp->Id);
+        $posts = $postRepo->getPostsByChirpId($chirp->getId());
 
         foreach($posts as $post){
             echo $post->getContent();
             echo "<br>";
         }
+        ?>
+<!--        Post a new comment/post-->
+        <form method="POST" action="postsubmit.php">
+            <input type="text" value="post a comment!" name="postContent"/>
+            <input type="hidden" name="chirpId" value="<?= $chirp->getId() ?>" />
+            <input type="submit" value="post!"/>
+        </form><br>
 
+
+
+
+        <?php
     }
 }

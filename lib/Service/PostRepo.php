@@ -1,6 +1,7 @@
 <?php
 
-class PostRepo{
+class PostRepo
+{
 
     private $pdo;
 
@@ -10,24 +11,28 @@ class PostRepo{
     }
 
     /**
-     * @param $userId
+     * @param $chirpId
      * @return array
      */
-    public function getPostsByUserId($userId)
+    public function getPostsByChirpId($chirpId)
     {
         $Posts = array();
-        $stmt = $this->pdo->prepare('SELECT * FROM rst_posts WHERE rst_chirp_id = :userid');
-        $stmt->bindParam(':userid', $userId, PDO::PARAM_INT);
+        $stmt = $this->pdo->prepare('SELECT rst_posts.id, rst_posts.rst_users_id, rst_posts.content, rst_users.fname, rst_users.surname
+                                     FROM rst_posts 
+                                     LEFT JOIN `rst_users` ON rst_posts.rst_users_id = rst_users.id
+                                     WHERE rst_chirps_id = :chirpId;');
+
+        $stmt->bindParam(':chirpId', $chirpId, PDO::PARAM_INT);
         $stmt->execute();
         $PostsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
         if (!$PostsData) {
             $nullPost = new Post();
-            $nullPost->setContent("You haven't posted any tweets! Maybe it's time to get started!");
+            $nullPost->setContent("No comments yet!");
             return $nullPost;
         }
 
-        foreach($PostsData as $PostRow){
+        foreach ($PostsData as $PostRow) {
             $Posts[] = $this->createPostFromData($PostRow);
         }
 
@@ -45,19 +50,24 @@ class PostRepo{
     /**
      * @param Post $Post
      */
-    public function sendPostToDB(Post $Post){
+    public function sendPostToDB(Post $Post)
+    {
 
-        $stmt = $this->pdo->prepare('INSERT INTO rst_Posts (rst_users_id, content)
-                                                         VALUES (:users_id, :content);');
+        $stmt = $this->pdo->prepare('INSERT INTO rst_posts (rst_users_id, rst_chirps_id, content)
+                                                         VALUES (:users_id, :rst_chirp_id, :content);');
 
         $userId = $Post->getUserId();
         $content = $Post->getContent();
+        $chirpId = $Post->getChirpId();
 
-        $stmt->bindParam(':users_id', $userId, PDO::PARAM_STR);
-        $stmt->bindParam(':content', $content , PDO::PARAM_STR);
+        $stmt->bindParam(':users_id', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':content', $content, PDO::PARAM_STR);
+        $stmt->bindParam(':rst_chirp_id', $chirpId, PDO::PARAM_INT);
         $stmt->execute();
 
-        $_SESSION['flash'] = "You have sucessfully posted a Post!";
+        $_SESSION['flash'] = "You have sucessfully posted!";
 
     }
+
+    //TODO updatepost to db? is this necessary?
 }

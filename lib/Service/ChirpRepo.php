@@ -16,7 +16,7 @@ class ChirpRepo{
     public function getChirpsByUserId($userId)
     {
         $chirps = array();
-        $stmt = $this->pdo->prepare('SELECT * FROM rst_chirps WHERE rst_users_id = :userid');
+        $stmt = $this->pdo->prepare('SELECT * FROM rst_chirps WHERE rst_users_id = :userid ORDER BY id DESC');
         $stmt->bindParam(':userid', $userId, PDO::PARAM_INT);
         $stmt->execute();
         $chirpsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -33,6 +33,30 @@ class ChirpRepo{
 
         return $chirps;
     }
+
+    /**
+     * @return array
+     */
+    public function getAllChirps()
+    {
+        $chirps = array();
+        $stmt = $this->pdo->prepare('SELECT * FROM rst_chirps ORDER BY id DESC');
+        $stmt->execute();
+        $chirpsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$chirpsData) {
+            $nullChirp = new Chirp();
+            $nullChirp->setContent("You, and no-one else haven't posted any tweets! Maybe it's time to get started!");
+            return $nullChirp;
+        }
+
+        foreach($chirpsData as $chirpRow){
+            $chirps[] = $this->createChirpFromData($chirpRow);
+        }
+
+        return $chirps;
+    }
+
 
     private function createChirpFromData(array $chirpData)
     {
@@ -57,7 +81,7 @@ class ChirpRepo{
         $stmt->bindParam(':content', $content , PDO::PARAM_STR);
         $stmt->execute();
 
-        $_SESSION['flash'] = "You have sucessfully posted a chirp!";
+        $_SESSION['flash'] = "You have successfully posted a chirp!";
 
     }
 }
