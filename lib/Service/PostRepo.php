@@ -17,26 +17,21 @@ class PostRepo
     public function getPostsByChirpId($chirpId)
     {
         $Posts = array();
-        $stmt = $this->pdo->prepare('SELECT rst_posts.id, rst_posts.rst_users_id, rst_posts.content, rst_users.fname, rst_users.surname
-                                     FROM rst_posts 
-                                     LEFT JOIN `rst_users` ON rst_posts.rst_users_id = rst_users.id
+        $stmt = $this->pdo->prepare('SELECT p.id, p.rst_users_id, p.content, u.fname, u.surname
+                                     FROM rst_posts as p
+                                     LEFT JOIN `rst_users` as u ON p.rst_users_id = u.id
                                      WHERE rst_chirps_id = :chirpId;');
 
         $stmt->bindParam(':chirpId', $chirpId, PDO::PARAM_INT);
         $stmt->execute();
         $PostsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         if (!$PostsData) {
             $nullPost = new Post();
             $nullPost->setContent("No comments yet!");
             return $nullPost;
         }
 
-        foreach ($PostsData as $PostRow) {
-            $Posts[] = $this->createPostFromData($PostRow);
-        }
-
-        return $Posts;
+        return $PostsData;
     }
 
     private function createPostFromData(array $PostData)

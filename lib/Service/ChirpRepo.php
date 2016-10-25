@@ -40,21 +40,20 @@ class ChirpRepo{
     public function getAllChirps()
     {
         $chirps = array();
-        $stmt = $this->pdo->prepare('SELECT * FROM rst_chirps ORDER BY id DESC');
+        $stmt = $this->pdo->prepare('SELECT u.fname, u.surname, c.content, c.id 
+                                      FROM rst_chirps as c 
+                                      LEFT JOIN `rst_users` as u ON c.rst_users_id = u.id
+                                      ORDER BY c.id DESC');
         $stmt->execute();
         $chirpsData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+//        var_dump($chirpsData);die;
         if (!$chirpsData) {
             $nullChirp = new Chirp();
             $nullChirp->setContent("You, and no-one else haven't posted any tweets! Maybe it's time to get started!");
             return $nullChirp;
         }
 
-        foreach($chirpsData as $chirpRow){
-            $chirps[] = $this->createChirpFromData($chirpRow);
-        }
-
-        return $chirps;
+        return $chirpsData;
     }
 
 

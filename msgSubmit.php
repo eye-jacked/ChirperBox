@@ -3,7 +3,6 @@ session_start();
 
 require __DIR__ . '/bootstrap.php';
 
-include('includes/header.php');
 
 if ($_SERVER['REQUEST_METHOD'] === "POST" && ($_POST['msgContent']) && ($_POST['msgContent']) && (isset($_SESSION['id']))) {
     $container = new Container($configuration);
